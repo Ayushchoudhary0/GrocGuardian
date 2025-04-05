@@ -1,49 +1,10 @@
 
-import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { BellRing, CheckCircle, Clock, Trash2, X } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { Check, Trash2, Bell } from "lucide-react";
+import { motion } from "framer-motion";
 
-// Mock notification data
-const mockNotifications = [
-  { 
-    id: 1, 
-    title: "Milk is expiring soon", 
-    message: "Your milk will expire in 3 days", 
-    type: "expiring",
-    date: "2025-04-08"
-  },
-  { 
-    id: 2, 
-    title: "Bread has expired", 
-    message: "Your bread expired yesterday", 
-    type: "expired",
-    date: "2025-04-04"
-  },
-  { 
-    id: 3, 
-    title: "Yogurt is expiring soon", 
-    message: "Your yogurt will expire tomorrow", 
-    type: "expiring",
-    date: "2025-04-06"
-  },
-  { 
-    id: 4, 
-    title: "Eggs are expiring soon", 
-    message: "Your eggs will expire in 2 days", 
-    type: "expiring",
-    date: "2025-04-07"
-  },
-  { 
-    id: 5, 
-    title: "Spinach has expired", 
-    message: "Your spinach expired 3 days ago", 
-    type: "expired",
-    date: "2025-04-02"
-  },
-];
-
+// Define the Notification type with specific literal types for the 'type' field
 type Notification = {
   id: number;
   title: string;
@@ -52,146 +13,128 @@ type Notification = {
   date: string;
 };
 
-const NotificationCard = ({ 
-  notification, 
-  onDismiss 
-}: { 
-  notification: Notification; 
-  onDismiss: (id: number) => void 
-}) => {
-  const icon = notification.type === "expiring" ? 
-    <Clock className="h-5 w-5 text-expiring" /> : 
-    <Trash2 className="h-5 w-5 text-expired" />;
-
-  const date = new Date(notification.date).toLocaleDateString();
-  
-  return (
-    <div className="bg-card border rounded-lg p-4 animate-slide-in shadow-sm">
-      <div className="flex justify-between items-start">
-        <div className="flex gap-3">
-          {icon}
-          <div>
-            <h3 className="font-semibold">{notification.title}</h3>
-            <p className="text-sm text-muted-foreground">{notification.message}</p>
-            <p className="text-xs text-muted-foreground mt-1">{date}</p>
-          </div>
-        </div>
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          className="h-8 w-8 rounded-full hover:bg-muted"
-          onClick={() => onDismiss(notification.id)}
-        >
-          <X className="h-4 w-4" />
-          <span className="sr-only">Dismiss</span>
-        </Button>
-      </div>
-    </div>
-  );
-};
-
 const Notifications = () => {
-  const [notifications, setNotifications] = useState<Notification[]>(mockNotifications);
-  const { toast } = useToast();
-  
-  const handleDismiss = (id: number) => {
-    setNotifications(notifications.filter(n => n.id !== id));
-    toast({
-      title: "Notification dismissed",
-      description: "The notification has been removed",
-    });
+  // Mock data with correct type values
+  const [notifications, setNotifications] = useState<Notification[]>([
+    {
+      id: 1,
+      title: "Milk expiring soon",
+      message: "Your milk will expire in 2 days.",
+      type: "expiring",
+      date: "2025-04-07"
+    },
+    {
+      id: 2,
+      title: "Bread expired",
+      message: "Your bread has expired today.",
+      type: "expired",
+      date: "2025-04-05"
+    },
+    {
+      id: 3,
+      title: "Yogurt expiring soon",
+      message: "Your yogurt will expire in 3 days.",
+      type: "expiring", 
+      date: "2025-04-08"
+    },
+    {
+      id: 4,
+      title: "Chicken expiring soon",
+      message: "Your chicken will expire tomorrow.",
+      type: "expiring",
+      date: "2025-04-06"
+    },
+    {
+      id: 5,
+      title: "Eggs expired",
+      message: "Your eggs have expired 2 days ago.",
+      type: "expired",
+      date: "2025-04-03"
+    }
+  ]);
+
+  const dismissNotification = (id: number) => {
+    setNotifications(prev => prev.filter(notification => notification.id !== id));
   };
 
-  const handleDismissAll = () => {
+  const clearAllNotifications = () => {
     setNotifications([]);
-    toast({
-      title: "All notifications cleared",
-      description: "All notifications have been dismissed",
-    });
   };
 
-  const getExpiringCount = () => notifications.filter(n => n.type === "expiring").length;
-  const getExpiredCount = () => notifications.filter(n => n.type === "expired").length;
+  const container = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const item = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0 }
+  };
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold flex items-center">
-            <BellRing className="mr-3 h-8 w-8" /> 
-            Notifications
-          </h1>
-          <p className="text-muted-foreground mt-1">Stay updated on your grocery expiration dates</p>
-        </div>
-        
+    <div className="container mx-auto">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">Notifications</h1>
         {notifications.length > 0 && (
-          <Button 
-            variant="outline" 
-            onClick={handleDismissAll}
-          >
-            <CheckCircle className="h-4 w-4 mr-2" />
-            Dismiss All
+          <Button variant="outline" onClick={clearAllNotifications}>
+            <Trash2 size={16} className="mr-2" />
+            Clear All
           </Button>
         )}
       </div>
-      
-      {notifications.length === 0 ? (
-        <Card className="glass text-center py-16">
-          <CardContent>
-            <div className="flex flex-col items-center">
-              <BellRing className="h-12 w-12 text-muted-foreground mb-3 opacity-50" />
-              <h3 className="text-lg font-medium">No Notifications</h3>
-              <p className="text-muted-foreground">You're all caught up! No expiring items to worry about.</p>
-            </div>
-          </CardContent>
-        </Card>
+
+      {notifications.length > 0 ? (
+        <motion.div 
+          className="space-y-4"
+          variants={container}
+          initial="hidden"
+          animate="show"
+        >
+          {notifications.map(notification => (
+            <motion.div
+              key={notification.id}
+              variants={item}
+              className={`glass p-4 rounded-lg border-l-4 ${
+                notification.type === "expired" ? "border-red-500" : "border-yellow-500"
+              } flex justify-between items-start`}
+            >
+              <div className="flex items-start gap-3">
+                <div className={`rounded-full p-2 ${
+                  notification.type === "expired" ? "bg-red-100 text-red-600" : "bg-yellow-100 text-yellow-600"
+                }`}>
+                  <Bell size={18} />
+                </div>
+                <div>
+                  <h3 className="font-medium">{notification.title}</h3>
+                  <p className="text-sm text-muted-foreground">{notification.message}</p>
+                  <p className="text-xs mt-1">
+                    {new Date(notification.date).toLocaleDateString()}
+                  </p>
+                </div>
+              </div>
+              <Button 
+                size="sm" 
+                variant="ghost" 
+                onClick={() => dismissNotification(notification.id)}
+                className="h-8 w-8 p-0"
+              >
+                <Check size={16} />
+              </Button>
+            </motion.div>
+          ))}
+        </motion.div>
       ) : (
-        <div className="space-y-6">
-          {getExpiringCount() > 0 && (
-            <Card className="glass">
-              <CardHeader className="pb-3">
-                <CardTitle className="flex items-center">
-                  <Clock className="h-5 w-5 mr-2 text-expiring" />
-                  Expiring Soon ({getExpiringCount()})
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {notifications
-                  .filter(n => n.type === "expiring")
-                  .map((notification, i) => (
-                    <div key={notification.id} style={{ animationDelay: `${i * 0.1}s` }}>
-                      <NotificationCard 
-                        notification={notification} 
-                        onDismiss={handleDismiss} 
-                      />
-                    </div>
-                  ))}
-              </CardContent>
-            </Card>
-          )}
-          
-          {getExpiredCount() > 0 && (
-            <Card className="glass">
-              <CardHeader className="pb-3">
-                <CardTitle className="flex items-center">
-                  <Trash2 className="h-5 w-5 mr-2 text-expired" />
-                  Expired Items ({getExpiredCount()})
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {notifications
-                  .filter(n => n.type === "expired")
-                  .map((notification, i) => (
-                    <div key={notification.id} style={{ animationDelay: `${i * 0.1}s` }}>
-                      <NotificationCard 
-                        notification={notification} 
-                        onDismiss={handleDismiss} 
-                      />
-                    </div>
-                  ))}
-              </CardContent>
-            </Card>
-          )}
+        <div className="text-center py-16">
+          <div className="bg-muted inline-flex rounded-full p-4 mb-4">
+            <Bell size={24} className="text-muted-foreground" />
+          </div>
+          <h2 className="text-xl font-medium mb-2">No notifications</h2>
+          <p className="text-muted-foreground">You're all caught up! There are no notifications.</p>
         </div>
       )}
     </div>
