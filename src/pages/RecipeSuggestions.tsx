@@ -152,14 +152,28 @@ const RecipeSuggestions = () => {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      <div>
-        <h1 className="text-3xl font-bold flex items-center">
-          <ChefHat className="mr-3 h-8 w-8" /> 
-          Recipe Suggestions
-        </h1>
-        <p className="text-muted-foreground mt-1">
-          Indian recipes based on ingredients in your inventory
-        </p>
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold flex items-center">
+            <ChefHat className="mr-3 h-8 w-8" /> 
+            Recipe Suggestions
+          </h1>
+          <p className="text-muted-foreground mt-1">
+            Indian recipes based on ingredients in your inventory
+          </p>
+        </div>
+        <div className="flex gap-4">
+          <img 
+            src="https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?q=80&w=1000&auto=format&fit=crop" 
+            alt="Fresh ingredients" 
+            className="h-16 w-16 rounded-md object-cover shadow-sm" 
+          />
+          <img 
+            src="https://images.unsplash.com/photo-1596797038530-2c107aa7a129?q=80&w=1000&auto=format&fit=crop" 
+            alt="Indian cuisine" 
+            className="h-16 w-16 rounded-md object-cover shadow-sm" 
+          />
+        </div>
       </div>
       
       <div className="relative">
