@@ -21,7 +21,7 @@ const Layout = () => {
             >
               <Menu size={20} />
             </button>
-            <h1 className="font-semibold text-lg">Fresh Find Grocer</h1>
+            <h1 className="font-semibold text-lg">GrocGuardian</h1>
           </div>
           <div>
             <ThemeToggle />

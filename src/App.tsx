@@ -22,7 +22,7 @@ const App = () => {
   return (
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
-        <ThemeProvider defaultTheme="light" storageKey="fresh-find-grocer-theme">
+        <ThemeProvider defaultTheme="light" storageKey="groc-guardian-theme">
           <TooltipProvider>
             <Toaster />
             <Sonner />

@@ -16,9 +16,9 @@ const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
     >
       <div className="p-4 flex justify-center items-center h-16 border-b">
         {isOpen ? (
-          <h1 className="font-bold text-xl">FreshFind</h1>
+          <h1 className="font-bold text-xl">GrocGuardian</h1>
         ) : (
-          <span className="font-bold text-2xl">F</span>
+          <span className="font-bold text-2xl">G</span>
         )}
       </div>
       
